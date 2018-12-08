@@ -11,7 +11,8 @@ public class BattleManager : MonoBehaviour
 	public Transform[] playerTankSpawnPoints;
 	public Transform[] enemyTankSpawnPoints;
 
-	private List<TankController> tanks = new List<TankController>(8);
+	private List<TankController> tankControllers = new List<TankController>(8);
+	private int currentTankIndex = 0;
 
 	private void Awake()
 	{
@@ -21,7 +22,7 @@ public class BattleManager : MonoBehaviour
 
 	private void Start()
 	{
-		CameraController.instance.SetTarget(tanks[0].transform);
+		SetCurrentTank(currentTankIndex);
 	}
 
 	private void InstantiateTank(GameObject tankPrefab, Transform[] spawnPoints)
@@ -35,16 +36,28 @@ public class BattleManager : MonoBehaviour
 		if (tankController != null && tankStatusBars != null)
 		{
 			newTank.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length - 1)].position;
-			newTankStatusBars.transform.parent = uiCanvas;
+			newTankStatusBars.transform.SetParent(uiCanvas);
 
 			tankStatusBars.tankController = tankController;
 
-			tanks.Add(tankController);
+			tankController.enabled = false;
+
+			tankControllers.Add(tankController);
 		}
+	}
+
+	private void SetCurrentTank(int index)
+	{
+		tankControllers[index].enabled = true;
+		CameraController.instance.SetTarget(tankControllers[index].transform);
 	}
 
 	public void EndTurn()
 	{
+		tankControllers[currentTankIndex].actionPoint += 50;
+		tankControllers[currentTankIndex].enabled = false;
 
+		currentTankIndex = currentTankIndex == tankControllers.Count - 1 ? 0 : currentTankIndex + 1;
+		SetCurrentTank(currentTankIndex);
 	}
 }

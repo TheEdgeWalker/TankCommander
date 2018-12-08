@@ -10,6 +10,9 @@ public class TankController : MonoBehaviour
 	public int hitPoint = 100;
 	public int actionPoint = 100;
 
+	const int MOVE_COST = 2;
+	const int FIRE_COST = 40;
+
 	private NavMeshAgent agent;
 	private TankHitbox[] hitboxes;
 
@@ -24,15 +27,38 @@ public class TankController : MonoBehaviour
 		}
 	}
 
-	private void Update()
+	private void Start()
 	{
-		if (hitPoint <= 0)
-		{
-			gameObject.SetActive(false);
-		}
+		prevPosition = transform.position;
 	}
 
-	public bool IsBusy()
+	private Vector3 prevPosition;
+	private float distanceMoved = 0f;
+	private void Update()
+	{
+		if (actionPoint < agent.remainingDistance * MOVE_COST)
+		{
+			Debug.Log("Not enough action points to move");
+			agent.ResetPath();
+			return;
+		}
+
+		distanceMoved += Vector3.Distance(prevPosition, transform.position);
+		while (distanceMoved >= 1f)
+		{
+			actionPoint -= MOVE_COST;
+			distanceMoved -= 1f;
+		}
+
+		prevPosition = transform.position;
+	}
+
+	private bool IsMoving()
+	{
+		return agent.velocity.magnitude > 0f;
+	}
+
+	private bool IsBusy()
 	{
 		return agent.pathPending || agent.velocity.magnitude > 0f;
 	}
@@ -63,11 +89,23 @@ public class TankController : MonoBehaviour
 			return;
 		}
 
+		if (actionPoint < FIRE_COST)
+		{
+			Debug.Log("Not enough action points to fire");
+			return;
+		}
+
+		actionPoint -= FIRE_COST;
 		ShellManager.instance.Fire(turret);
 	}
 
 	public void RecieveDamage(int damage)
 	{
 		hitPoint -= damage;
+
+		if (hitPoint <= 0)
+		{
+			gameObject.SetActive(false);
+		}
 	}
 }
