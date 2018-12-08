@@ -25,7 +25,7 @@ public class ShellManager : MonoBehaviour
 		shell.transform.rotation = turret.rotation;
 
 		// Place the shell a little bit forward to the turret
-		shell.transform.Translate(Vector3.forward * 1.2f);
+		shell.transform.Translate(Vector3.forward * 1.3f);
 
 		shell.SetActive(true);
 	}
