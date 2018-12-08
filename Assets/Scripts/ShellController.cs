@@ -17,4 +17,9 @@ public class ShellController : MonoBehaviour
 		explosion.transform.position = transform.position;
 		explosion.Play();
 	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		Debug.Log(other.tag);
+	}
 }
