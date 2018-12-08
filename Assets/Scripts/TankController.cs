@@ -8,10 +8,27 @@ public class TankController : MonoBehaviour
 	public Transform turret;
 
 	private NavMeshAgent agent;
+	private TankHitbox[] hitboxes;
+
+	private int health = 100;
 
 	private void Awake()
 	{
 		agent = GetComponent<NavMeshAgent>();
+		hitboxes = GetComponentsInChildren<TankHitbox>();
+
+		foreach(TankHitbox hitbox in hitboxes)
+		{
+			hitbox.SetTankController(this);
+		}
+	}
+
+	private void Update()
+	{
+		if (health <= 0)
+		{
+			gameObject.SetActive(false);
+		}
 	}
 
 	public void SetDestination(Vector3 destination)
@@ -30,5 +47,15 @@ public class TankController : MonoBehaviour
 		target.y = turret.position.y;
 		turret.LookAt(target);
 		
+	}
+
+	public void Fire()
+	{
+		ShellManager.instance.Fire(turret);
+	}
+
+	public void RecieveDamage(int damage)
+	{
+		health -= damage;
 	}
 }

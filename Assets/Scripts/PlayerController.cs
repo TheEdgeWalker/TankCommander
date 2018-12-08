@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
 				if (hit.collider.tag == "Enemy")
 				{
 					tankController.RotateTurretTo(hit.point);
+					tankController.Fire();
 				}
 				else
 				{
