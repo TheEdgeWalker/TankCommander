@@ -113,6 +113,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!198 &272091017 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198431953135059324, guid: 24a5fb6407369324a8856c7e0b7101a9,
+    type: 2}
+  m_PrefabInternal: {fileID: 800050155}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +249,7 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c531bf1d5c65f14e986aa898c9d0bb7, type: 2}
   m_IsPrefabAsset: 0
---- !u!1001 &840128998
+--- !u!1001 &800050155
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -283,10 +288,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 1421987106029958, guid: 24a5fb6407369324a8856c7e0b7101a9, type: 2}
-      propertyPath: m_TagString
-      value: Shell
-      objectReference: {fileID: 0}
+    - target: {fileID: 114191288769773020, guid: 24a5fb6407369324a8856c7e0b7101a9,
+        type: 2}
+      propertyPath: explosion
+      value: 
+      objectReference: {fileID: 272091017}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24a5fb6407369324a8856c7e0b7101a9, type: 2}
   m_IsPrefabAsset: 0
