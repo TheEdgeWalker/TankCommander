@@ -18,29 +18,21 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetMouseButtonUp(0))
+		if (Input.GetMouseButtonDown(0))
 		{
-			Vector3 destination;
-			if (GetClickPosition(out destination))
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit))
 			{
-				tankController.SetDestination(destination);
+				if (hit.collider.tag == "Enemy")
+				{
+					tankController.RotateTurretTo(hit.point);
+				}
+				else
+				{
+					tankController.SetDestination(hit.point);
+				}
 			}
 		}
-	}
-
-	private bool GetClickPosition(out Vector3 position)
-	{
-		position = Vector3.zero;
-
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-		RaycastHit hit;
-		if (Physics.Raycast(ray, out hit))
-		{
-			position = hit.point;
-			return true;
-		}
-
-		return false;
 	}
 }

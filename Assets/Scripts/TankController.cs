@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class TankController : MonoBehaviour
 {
+	public Transform turret;
+
 	private NavMeshAgent agent;
 
 	private void Awake()
@@ -21,5 +23,12 @@ public class TankController : MonoBehaviour
 		}
 
 		agent.SetDestination(destination);
+	}
+
+	public void RotateTurretTo(Vector3 target)
+	{
+		target.y = turret.position.y;
+		turret.LookAt(target);
+		
 	}
 }
