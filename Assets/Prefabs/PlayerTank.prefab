@@ -521,6 +521,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turret: {fileID: 4167473814343214}
+  hitPoint: 100
+  actionPoint: 100
 --- !u!114 &114259544251540066
 MonoBehaviour:
   m_ObjectHideFlags: 1
