@@ -533,8 +533,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turret: {fileID: 4745444239121648}
-  hitPoint: 100
-  actionPoint: 100
 --- !u!114 &114841314035455310
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -571,7 +569,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 360
-  m_StoppingDistance: 0.5
+  m_StoppingDistance: 10
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

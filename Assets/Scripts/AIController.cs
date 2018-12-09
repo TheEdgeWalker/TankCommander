@@ -14,12 +14,16 @@ public class AIController : ExternalController
 		aiRoot.OpenBranch(
 			BT.If(HasTarget).OpenBranch(
 				BT.If(CanFireAtTarget).OpenBranch(
-					BT.Call(Fire),
-					BT.Wait(5f)
+					BT.Call(FireAtTarget),
+					BT.Wait(2f)
 				),
-				BT.Sequence().OpenBranch(
+				BT.If(CanFireAtTarget).OpenBranch(
 					BT.Call(MoveToTarget),
 					BT.Wait(1f)
+				),
+				BT.Sequence().OpenBranch(
+					BT.Wait(2f),
+					BT.Call(EndTurn)
 				)
 			)
 		);
@@ -47,19 +51,40 @@ public class AIController : ExternalController
 
 	private bool CanFireAtTarget()
 	{
+		if (tankController.actionPoint.Value < tankController.fireCost)
+		{
+			return false;
+		}
+
+		// raytrace from turret
+
 		return true;
 	}
 
-
-	private void Fire()
+	private void FireAtTarget()
 	{
 		Debug.Log("Fire");
 		Fire(target.transform.position);
+	}
+
+	private bool CanMoveToTarget()
+	{
+		if (tankController.actionPoint.Value < tankController.moveCost)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	private void MoveToTarget()
 	{
 		Debug.Log("MoveToTarget");
 		SetDestination(target.transform.position);
+	}
+
+	private void EndTurn()
+	{
+		BattleManager.instance.EndTurn();
 	}
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExternalController : MonoBehaviour
 {
-	private TankController tankController;
+	protected TankController tankController;
 
 	private void Awake()
 	{
