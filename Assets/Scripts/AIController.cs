@@ -51,6 +51,11 @@ public class AIController : ExternalController
 
 	private bool CanFireAtTarget()
 	{
+		if (tankController.IsBusy())
+		{
+			return false;
+		}
+
 		if (tankController.actionPoint.Value < tankController.fireCost)
 		{
 			return false;
