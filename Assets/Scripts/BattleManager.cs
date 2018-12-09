@@ -44,10 +44,11 @@ public class BattleManager : MonoBehaviour
 		ExternalController externalController = newTank.GetComponent<ExternalController>();
 		UITankStatus tankStatusBars = newTankStatusBars.GetComponent<UITankStatus>();
 
-		if (tankController != null && externalController !=null && tankStatusBars != null)
+		if (tankController != null && externalController != null && tankStatusBars != null)
 		{
-			int randomIndex = Random.Range(0, spawnPoints.Length - 1);
-			newTank.transform.position = spawnPoints[randomIndex].position;
+			int randomIndex = Random.Range(0, spawnPoints.Length);
+			Vector3 randomPosition = spawnPoints[randomIndex].position + new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f));
+			newTank.transform.position = randomPosition;
 			newTankStatusBars.transform.SetParent(uiCanvas);
 
 			tankStatusBars.SetTank(tankController, externalController);
