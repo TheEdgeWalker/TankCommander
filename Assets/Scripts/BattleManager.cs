@@ -39,7 +39,7 @@ public class BattleManager : MonoBehaviour
 
 		TankController tankController = newTank.GetComponent<TankController>();
 		ExternalController externalController = newTank.GetComponent<ExternalController>();
-		TankStatusBars tankStatusBars = newTankStatusBars.GetComponent<TankStatusBars>();
+		UITankStatus tankStatusBars = newTankStatusBars.GetComponent<UITankStatus>();
 
 		if (tankController != null && externalController !=null && tankStatusBars != null)
 		{
@@ -47,7 +47,7 @@ public class BattleManager : MonoBehaviour
 			newTank.transform.position = spawnPoints[randomIndex].position;
 			newTankStatusBars.transform.SetParent(uiCanvas);
 
-			tankStatusBars.SetTankController(tankController);
+			tankStatusBars.SetTank(tankController, externalController);
 
 			// disable initially
 			externalController.enabled = false;

@@ -21,7 +21,7 @@ public class AIController : ExternalController
 					BT.Call(MoveToTarget),
 					BT.Wait(1f)
 				),
-				BT.Sequence().OpenBranch(
+				BT.If(IsNotMoving).OpenBranch(
 					BT.Wait(2f),
 					BT.Call(EndTurn)
 				)
@@ -102,5 +102,10 @@ public class AIController : ExternalController
 	private void EndTurn()
 	{
 		BattleManager.instance.EndTurn();
+	}
+
+	private bool IsNotMoving()
+	{
+		return !tankController.IsMoving();
 	}
 }

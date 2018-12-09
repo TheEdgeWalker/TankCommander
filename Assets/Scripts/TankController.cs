@@ -52,14 +52,14 @@ public class TankController : MonoBehaviour
 		prevPosition = transform.position;
 	}
 
-	private bool IsMoving()
+	public bool IsMoving()
 	{
 		return agent.velocity.magnitude > 0f;
 	}
 
 	private bool IsBusy()
 	{
-		return agent.pathPending || agent.velocity.magnitude > 0f;
+		return agent.pathPending || IsMoving();
 	}
 
 	public void SetDestination(Vector3 destination)
