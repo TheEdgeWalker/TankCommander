@@ -6,7 +6,7 @@ public class ExternalController : MonoBehaviour
 {
 	protected TankController tankController;
 
-	private void Awake()
+	protected void Awake()
 	{
 		tankController = GetComponent<TankController>();
 	}

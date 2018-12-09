@@ -2,20 +2,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AIController : ExternalController
 {
 	private Root aiRoot;
 	private GameObject target;
 
+	private NavMeshAgent agent;
+	private NavMeshPath path;
+
+	private new void Awake()
+	{
+		base.Awake();
+
+		agent = GetComponent<NavMeshAgent>();
+		path = new NavMeshPath();
+	}
+
 	private void Start()
 	{
 		aiRoot = BT.Root();
 		aiRoot.OpenBranch(
-			BT.If(tankController.IsBusy).OpenBranch(
-				BT.Wait(1f)
-			),
 			BT.If(HasTarget).OpenBranch(
+				BT.If(tankController.IsBusy).OpenBranch(
+					BT.Call(() => { Debug.Log("Busy"); }),
+					BT.Wait(1f)
+				),
+				BT.If(CanTakeBehind).OpenBranch(
+					BT.Wait(5f),
+					BT.Call(FireAtTarget),
+					BT.Wait(1f)
+				),
 				BT.If(CanFireAtTarget).OpenBranch(
 					BT.Call(FireAtTarget),
 					BT.Wait(1f)
@@ -28,6 +46,10 @@ public class AIController : ExternalController
 					BT.Wait(1f),
 					BT.Call(EndTurn)
 				)
+			),
+			BT.If(HasNoTarget).OpenBranch(
+				BT.Call(() => { Debug.Log("Honestly, this should not happen"); }),
+				BT.Call(EndTurn)
 			)
 		);
 	}
@@ -52,6 +74,11 @@ public class AIController : ExternalController
 		return target != null;
 	}
 
+	private bool HasNoTarget()
+	{
+		return target == null;
+	}
+
 	private bool CanFireAtTarget()
 	{
 		if (tankController.IsBusy())
@@ -65,8 +92,7 @@ public class AIController : ExternalController
 		}
 
 		// check distance
-		ShellController shell = ShellManager.instance.shell.GetComponent<ShellController>();
-		if (shell.range < Vector3.Distance(transform.position, target.transform.position))
+		if (!IsInCannonRange())
 		{
 			return false;
 		}
@@ -109,6 +135,7 @@ public class AIController : ExternalController
 
 	private void MoveToTarget()
 	{
+		agent.stoppingDistance = 15f;
 		SetDestination(target.transform.position);
 	}
 
@@ -120,5 +147,51 @@ public class AIController : ExternalController
 	private bool IsNotMoving()
 	{
 		return !tankController.IsMoving();
+	}
+
+	private bool CanTakeBehind()
+	{
+		Vector3 targetDir = transform.position - target.transform.position;
+		float angle = Vector3.Angle(target.transform.forward, targetDir);
+		if (angle > 135f && angle < 225f && IsInCannonRange())
+		{
+			Debug.Log("I already have your six");
+			return false;
+		}
+
+		Vector3 targetBehind = target.transform.position - (4f * target.transform.forward);
+		if (agent.CalculatePath(targetBehind, path) &&
+			path.status == NavMeshPathStatus.PathComplete &&
+			GetPathLength(path) * tankController.moveCost < tankController.actionPoint.Value - tankController.fireCost
+		)
+		{
+			Debug.Log("Attempting to take back: " + targetBehind);
+			agent.stoppingDistance = 0.5f;
+			agent.ResetPath();
+			return agent.SetPath(path);
+		}
+
+		return false;
+	}
+
+	private bool IsInCannonRange()
+	{
+		ShellController shell = ShellManager.instance.shell.GetComponent<ShellController>();
+		return shell.range >= Vector3.Distance(transform.position, target.transform.position);
+	}
+
+	public static float GetPathLength(NavMeshPath path)
+	{
+		float length = 0f;
+
+		if ((path.status != NavMeshPathStatus.PathInvalid) && (path.corners.Length > 1))
+		{
+			for (int i = 1; i < path.corners.Length; ++i)
+			{
+				length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+			}
+		}
+
+		return length;
 	}
 }
