@@ -21,8 +21,6 @@ public class TankHitbox : MonoBehaviour
 			{
 				tankController.RecieveDamage((int)(15 * damageMultiplier));
 			}
-
-			other.gameObject.SetActive(false);
 		}
 	}
 }

@@ -11,13 +11,23 @@ public class BattleManager : MonoBehaviour
 	public Transform[] playerTankSpawnPoints;
 	public Transform[] enemyTankSpawnPoints;
 
-	private List<TankController> tankControllers = new List<TankController>(8);
+	private struct Tank
+	{
+		public GameObject gameObject;
+		public TankController tankController;
+		public ExternalController externalController;
+	}
+
+	private List<Tank> tanks = new List<Tank>();
 	private int currentTankIndex = 0;
 
 	private void Awake()
 	{
-		InstantiateTank(playerTankPrefab, playerTankSpawnPoints);
-		InstantiateTank(enemyTankPrefab, enemyTankSpawnPoints);
+		for (int i = 0; i < 3; ++i)
+		{
+			InstantiateTank(playerTankPrefab, playerTankSpawnPoints);
+			InstantiateTank(enemyTankPrefab, enemyTankSpawnPoints);
+		}
 	}
 
 	private void Start()
@@ -31,33 +41,48 @@ public class BattleManager : MonoBehaviour
 		GameObject newTankStatusBars = Instantiate(tankStatusBarsPrefab);
 
 		TankController tankController = newTank.GetComponent<TankController>();
+		ExternalController externalController = newTank.GetComponent<ExternalController>();
 		TankStatusBars tankStatusBars = newTankStatusBars.GetComponent<TankStatusBars>();
 
-		if (tankController != null && tankStatusBars != null)
+		if (tankController != null && externalController !=null && tankStatusBars != null)
 		{
 			newTank.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length - 1)].position;
 			newTankStatusBars.transform.SetParent(uiCanvas);
 
 			tankStatusBars.tankController = tankController;
 
-			tankController.enabled = false;
+			Tank tank;
+			tank.gameObject = newTank;
+			tank.tankController = tankController;
+			tank.externalController = externalController;
 
-			tankControllers.Add(tankController);
+			// disable initially
+			tank.externalController.enabled = false;
+
+			tanks.Add(tank);
 		}
+		else
+		{
+			Debug.LogError("Components not found");
+		}
+
+		// disable player control by default
 	}
 
 	private void SetCurrentTank(int index)
 	{
-		tankControllers[index].enabled = true;
-		CameraController.instance.SetTarget(tankControllers[index].transform);
+		Tank tank = tanks[index];
+		CameraController.instance.SetTarget(tank.gameObject.transform);
+		tank.externalController.enabled = true;
 	}
 
 	public void EndTurn()
 	{
-		tankControllers[currentTankIndex].actionPoint += 50;
-		tankControllers[currentTankIndex].enabled = false;
+		Tank currentTank = tanks[currentTankIndex];
+		currentTank.tankController.actionPoint += 50;
+		currentTank.externalController.enabled = false;
 
-		currentTankIndex = currentTankIndex == tankControllers.Count - 1 ? 0 : currentTankIndex + 1;
+		currentTankIndex = currentTankIndex == tanks.Count - 1 ? 0 : currentTankIndex + 1;
 		SetCurrentTank(currentTankIndex);
 	}
 }

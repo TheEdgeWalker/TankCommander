@@ -20,6 +20,7 @@ public class ShellController : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log(other.tag);
+		Debug.Log("Shell collision: " + other.tag);
+		gameObject.SetActive(false);
 	}
 }

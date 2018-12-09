@@ -1,37 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : ExternalController
 {
-	private TankController tankController;
-
-	private void Awake()
-	{
-		tankController = GetComponent<TankController>();
-	}
-
-	private void Start()
-	{
-		CameraController.instance.SetTarget(transform);
-	}
-
 	private void Update()
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
+			if (EventSystem.current.IsPointerOverGameObject())
+			{
+				return;
+			}
+
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit))
 			{
 				if (hit.collider.tag == "Enemy")
 				{
-					tankController.RotateTurretTo(hit.point);
-					tankController.Fire();
+					Fire(hit.point);
 				}
 				else
 				{
-					tankController.SetDestination(hit.point);
+					SetDestination(hit.point);
 				}
 			}
 		}
