@@ -57,7 +57,7 @@ public class TankController : MonoBehaviour
 		return agent.velocity.magnitude > 0f;
 	}
 
-	private bool IsBusy()
+	public bool IsBusy()
 	{
 		return agent.pathPending || IsMoving();
 	}
@@ -106,5 +106,10 @@ public class TankController : MonoBehaviour
 		{
 			gameObject.SetActive(false);
 		}
+	}
+
+	private void OnDisable()
+	{
+		BattleManager.instance.CheckVictory();
 	}
 }
