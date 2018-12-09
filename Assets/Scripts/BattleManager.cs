@@ -29,7 +29,7 @@ public class BattleManager : MonoBehaviour
 
 	private void Start()
 	{
-		SetAsCurrentTank(currentTankIndex);
+		SetCurrentTank();
 	}
 
 	private void InstantiateTank(GameObject tankPrefab, Transform[] spawnPoints)
@@ -60,9 +60,15 @@ public class BattleManager : MonoBehaviour
 		}
 	}
 
-	private void SetAsCurrentTank(int index)
+	private void SetCurrentTank()
 	{
-		GameObject tank = tanks[index];
+		GameObject tank = tanks[currentTankIndex];
+		if (!tank.activeInHierarchy)
+		{
+			EndTurn();
+			return;
+		}
+
 		CameraController.instance.SetTarget(tank.transform);
 
 		ExternalController externalController = tank.GetComponent<ExternalController>();
@@ -89,7 +95,7 @@ public class BattleManager : MonoBehaviour
 		}
 
 		currentTankIndex = currentTankIndex == tanks.Count - 1 ? 0 : currentTankIndex + 1;
-		SetAsCurrentTank(currentTankIndex);
+		SetCurrentTank();
 	}
 
 	public GameObject GetClosestTank(Vector3 from, string tag = "Player")
