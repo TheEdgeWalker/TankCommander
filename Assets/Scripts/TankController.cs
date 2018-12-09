@@ -105,11 +105,7 @@ public class TankController : MonoBehaviour
 		if (hitPoint.IsZero())
 		{
 			gameObject.SetActive(false);
+			BattleManager.instance.CheckVictory();
 		}
-	}
-
-	private void OnDisable()
-	{
-		BattleManager.instance.CheckVictory();
 	}
 }

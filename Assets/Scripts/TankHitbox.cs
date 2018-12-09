@@ -19,7 +19,7 @@ public class TankHitbox : MonoBehaviour
 		{
 			if (tankController != null)
 			{
-				tankController.RecieveDamage((int)(15 * damageMultiplier));
+				tankController.RecieveDamage((int)(20 * damageMultiplier));
 			}
 		}
 	}

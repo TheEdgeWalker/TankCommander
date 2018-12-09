@@ -131,14 +131,14 @@ public class BattleManager : MonoBehaviour
 		{
 			if (!tank.activeInHierarchy)
 			{
-				return;
+				continue;
 			}
 
-			if (tag == "Player")
+			if (tank.tag == "Player")
 			{
 				players++;
 			}
-			else if (tag == "Enemy")
+			else if (tank.tag == "Enemy")
 			{
 				enemies++;
 			}
