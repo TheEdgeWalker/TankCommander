@@ -7,8 +7,8 @@ public class TankController : MonoBehaviour
 {
 	public Transform turret;
 
-	public int hitPoint = 100;
-	public int actionPoint = 100;
+	public TankResource hitPoint = new TankResource(100);
+	public TankResource actionPoint = new TankResource(100);
 
 	const int MOVE_COST = 2;
 	const int FIRE_COST = 40;
@@ -36,7 +36,7 @@ public class TankController : MonoBehaviour
 	private float distanceMoved = 0f;
 	private void Update()
 	{
-		if (actionPoint < agent.remainingDistance * MOVE_COST)
+		if (actionPoint.Value < agent.remainingDistance * MOVE_COST)
 		{
 			Debug.Log("Not enough action points to move");
 			agent.ResetPath();
@@ -46,7 +46,7 @@ public class TankController : MonoBehaviour
 		distanceMoved += Vector3.Distance(prevPosition, transform.position);
 		while (distanceMoved >= 1f)
 		{
-			actionPoint -= MOVE_COST;
+			actionPoint.Subtract(MOVE_COST);
 			distanceMoved -= 1f;
 		}
 
@@ -89,21 +89,21 @@ public class TankController : MonoBehaviour
 			return;
 		}
 
-		if (actionPoint < FIRE_COST)
+		if (actionPoint.Value < FIRE_COST)
 		{
 			Debug.Log("Not enough action points to fire");
 			return;
 		}
 
-		actionPoint -= FIRE_COST;
+		actionPoint.Subtract(FIRE_COST);
 		ShellManager.instance.Fire(turret);
 	}
 
 	public void RecieveDamage(int damage)
 	{
-		hitPoint -= damage;
+		hitPoint.Subtract(damage);
 
-		if (hitPoint <= 0)
+		if (hitPoint.IsZero())
 		{
 			gameObject.SetActive(false);
 		}

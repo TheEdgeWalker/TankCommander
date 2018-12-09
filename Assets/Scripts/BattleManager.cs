@@ -46,10 +46,11 @@ public class BattleManager : MonoBehaviour
 
 		if (tankController != null && externalController !=null && tankStatusBars != null)
 		{
-			newTank.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length - 1)].position;
+			int randomIndex = Random.Range(0, spawnPoints.Length - 1);
+			newTank.transform.position = spawnPoints[randomIndex].position;
 			newTankStatusBars.transform.SetParent(uiCanvas);
 
-			tankStatusBars.tankController = tankController;
+			tankStatusBars.SetTankController(tankController);
 
 			Tank tank;
 			tank.gameObject = newTank;
@@ -65,8 +66,6 @@ public class BattleManager : MonoBehaviour
 		{
 			Debug.LogError("Components not found");
 		}
-
-		// disable player control by default
 	}
 
 	private void SetCurrentTank(int index)
@@ -79,7 +78,7 @@ public class BattleManager : MonoBehaviour
 	public void EndTurn()
 	{
 		Tank currentTank = tanks[currentTankIndex];
-		currentTank.tankController.actionPoint += 50;
+		currentTank.tankController.actionPoint.Add(50);
 		currentTank.externalController.enabled = false;
 
 		currentTankIndex = currentTankIndex == tanks.Count - 1 ? 0 : currentTankIndex + 1;
