@@ -14,6 +14,7 @@ public class BattleManager : MonoBehaviour
 	public Transform[] playerTankSpawnPoints;
 	public Transform[] enemyTankSpawnPoints;
 	public Button endTurnButton;
+	public Text gameResultText;
 
 	private List<GameObject> tanks = new List<GameObject>();
 	private int currentTankIndex = 0;
@@ -148,13 +149,31 @@ public class BattleManager : MonoBehaviour
 			}
 		}
 
+		if (players > 0 && enemies > 0)
+		{
+			return;
+		}
+
+		// disable all ExternalController
+		foreach (GameObject tank in tanks)
+		{
+			ExternalController externalController = tank.GetComponent<ExternalController>();
+			if (externalController != null)
+			{
+				externalController.enabled = false;
+			}
+		}
+
+		endTurnButton.enabled = false;
+		gameResultText.gameObject.SetActive(true);
+
 		if (players == 0)
 		{
-			Debug.Log("Enemy Win!");
+			gameResultText.text = "Enemy Win!";
 		}
 		else if (enemies == 0)
 		{
-			Debug.Log("Player Win!");
+			gameResultText.text = "Player Win!";
 		}
 	}
 }
