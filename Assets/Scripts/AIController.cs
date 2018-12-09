@@ -17,7 +17,7 @@ public class AIController : ExternalController
 					BT.Call(FireAtTarget),
 					BT.Wait(2f)
 				),
-				BT.If(CanFireAtTarget).OpenBranch(
+				BT.If(CanMoveToTarget).OpenBranch(
 					BT.Call(MoveToTarget),
 					BT.Wait(1f)
 				),
@@ -56,14 +56,31 @@ public class AIController : ExternalController
 			return false;
 		}
 
+		// check distance
+		ShellController shell = ShellManager.instance.shell.GetComponent<ShellController>();
+		if (shell.range < Vector3.Distance(transform.position, target.transform.position))
+		{
+			return false;
+		}
+
 		// raytrace from turret
+		Vector3 targetPos = target.transform.position;
+		targetPos.y = tankController.turret.position.y;
+
+		RaycastHit hit;
+		if (Physics.Linecast(tankController.turret.position, targetPos, out hit))
+		{
+			if (hit.collider.tag != "Player")
+			{
+				return false;
+			}
+		}
 
 		return true;
 	}
 
 	private void FireAtTarget()
 	{
-		Debug.Log("Fire");
 		Fire(target.transform.position);
 	}
 
@@ -79,7 +96,6 @@ public class AIController : ExternalController
 
 	private void MoveToTarget()
 	{
-		Debug.Log("MoveToTarget");
 		SetDestination(target.transform.position);
 	}
 
