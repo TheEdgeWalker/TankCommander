@@ -18,7 +18,7 @@ public class PlayerController : ExternalController
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit))
 			{
-				if (hit.collider.tag == "Enemy")
+				if (Input.GetKey(KeyCode.A))
 				{
 					Fire(hit.point);
 				}

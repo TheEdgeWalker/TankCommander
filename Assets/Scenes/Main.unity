@@ -16428,6 +16428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
+  range: 20
   explosion: {fileID: 272091017}
 --- !u!23 &2059171148
 MeshRenderer:
