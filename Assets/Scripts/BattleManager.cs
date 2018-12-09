@@ -115,4 +115,36 @@ public class BattleManager : MonoBehaviour
 
 		return target;
 	}
+
+	public void CheckVictory()
+	{
+		int players = 0;
+		int enemies = 0;
+
+		foreach (GameObject tank in tanks)
+		{
+			if (!tank.activeInHierarchy)
+			{
+				return;
+			}
+
+			if (tag == "Player")
+			{
+				players++;
+			}
+			else if (tag == "Enemy")
+			{
+				enemies++;
+			}
+		}
+
+		if (players == 0)
+		{
+			Debug.Log("Enemy Win!");
+		}
+		else if (enemies == 0)
+		{
+			Debug.Log("Player Win!");
+		}
+	}
 }
