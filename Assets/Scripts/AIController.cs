@@ -68,12 +68,12 @@ public class AIController : ExternalController
 			return false;
 		}
 
-		// raytrace from turret
+		// raytrace from muzzle
 		Vector3 targetPos = target.transform.position;
-		targetPos.y = tankController.turret.position.y;
+		targetPos.y = tankController.muzzle.position.y;
 
 		RaycastHit hit;
-		if (Physics.Linecast(tankController.turret.position, targetPos, out hit))
+		if (Physics.Linecast(tankController.muzzle.position, targetPos, out hit))
 		{
 			if (hit.collider.tag != "Player")
 			{

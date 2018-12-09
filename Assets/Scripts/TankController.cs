@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class TankController : MonoBehaviour
 {
 	public Transform turret;
+	public Transform muzzle;
 
 	public TankResource hitPoint = new TankResource(100);
 	public TankResource actionPoint = new TankResource(100);
@@ -77,7 +78,6 @@ public class TankController : MonoBehaviour
 	{
 		target.y = turret.position.y;
 		turret.LookAt(target);
-		
 	}
 
 	public void Fire()
@@ -95,7 +95,7 @@ public class TankController : MonoBehaviour
 		}
 
 		actionPoint.Subtract(fireCost);
-		ShellManager.instance.Fire(turret);
+		ShellManager.instance.Fire(muzzle);
 	}
 
 	public void RecieveDamage(int damage)

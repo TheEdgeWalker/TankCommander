@@ -14,18 +14,15 @@ public class ShellManager : MonoBehaviour
 		shell.SetActive(false);
 	}
 
-	public void Fire(Transform turret)
+	public void Fire(Transform muzzle)
 	{
 		if (shell.activeInHierarchy)
 		{
 			return;
 		}
 
-		shell.transform.position = turret.position;
-		shell.transform.rotation = turret.rotation;
-
-		// Place the shell a little bit forward to the turret
-		shell.transform.Translate(Vector3.forward * 1.3f);
+		shell.transform.position = muzzle.position;
+		shell.transform.rotation = muzzle.rotation;
 
 		shell.SetActive(true);
 	}
