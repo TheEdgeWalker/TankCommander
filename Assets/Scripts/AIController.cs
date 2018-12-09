@@ -12,17 +12,20 @@ public class AIController : ExternalController
 	{
 		aiRoot = BT.Root();
 		aiRoot.OpenBranch(
+			BT.If(tankController.IsBusy).OpenBranch(
+				BT.Wait(1f)
+			),
 			BT.If(HasTarget).OpenBranch(
 				BT.If(CanFireAtTarget).OpenBranch(
 					BT.Call(FireAtTarget),
-					BT.Wait(2f)
+					BT.Wait(1f)
 				),
 				BT.If(CanMoveToTarget).OpenBranch(
 					BT.Call(MoveToTarget),
 					BT.Wait(1f)
 				),
 				BT.If(IsNotMoving).OpenBranch(
-					BT.Wait(2f),
+					BT.Wait(1f),
 					BT.Call(EndTurn)
 				)
 			)
@@ -91,6 +94,11 @@ public class AIController : ExternalController
 
 	private bool CanMoveToTarget()
 	{
+		if (tankController.IsBusy())
+		{
+			return false;
+		}
+
 		if (tankController.actionPoint.Value < tankController.moveCost)
 		{
 			return false;

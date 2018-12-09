@@ -89,7 +89,7 @@ public class BattleManager : MonoBehaviour
 		GameObject tank = tanks[currentTankIndex];
 
 		TankController tankController = tank.GetComponent<TankController>();
-		if (tankController != null)
+		if (tank.activeInHierarchy && tankController != null)
 		{
 			tankController.actionPoint.Add(50);
 		}

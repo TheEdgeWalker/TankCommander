@@ -12,7 +12,7 @@ public class TankController : MonoBehaviour
 	public TankResource actionPoint = new TankResource(100);
 
 	public int moveCost = 2;
-	public int fireCost = 40;
+	public int fireCost = 30;
 
 	private NavMeshAgent agent;
 	private TankHitbox[] hitboxes;
