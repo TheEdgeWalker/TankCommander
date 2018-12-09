@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class BattleManager : MonoBehaviour
 	public GameObject tankStatusBarsPrefab;
 	public Transform[] playerTankSpawnPoints;
 	public Transform[] enemyTankSpawnPoints;
+	public Button endTurnButton;
 
 	private List<GameObject> tanks = new List<GameObject>();
 	private int currentTankIndex = 0;
@@ -68,6 +70,8 @@ public class BattleManager : MonoBehaviour
 			EndTurn();
 			return;
 		}
+
+		endTurnButton.interactable = tank.tag == "Player";
 
 		CameraController.instance.SetTarget(tank.transform);
 
