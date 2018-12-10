@@ -11,11 +11,6 @@ public class ExternalController : MonoBehaviour
 		tankController = GetComponent<TankController>();
 	}
 
-	protected void SetDestination(Vector3 destination)
-	{
-		tankController.SetDestination(destination);
-	}
-
 	protected void Fire(Vector3 target)
 	{
 		tankController.RotateTurretTo(target);

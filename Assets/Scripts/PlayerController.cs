@@ -24,7 +24,7 @@ public class PlayerController : ExternalController
 				}
 				else
 				{
-					SetDestination(hit.point);
+					tankController.SetDestination(hit.point);
 				}
 			}
 		}

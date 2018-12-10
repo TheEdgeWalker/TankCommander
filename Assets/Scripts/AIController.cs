@@ -2,22 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class AIController : ExternalController
 {
 	private Root aiRoot;
 	private GameObject target;
 
-	private NavMeshAgent agent;
-	private NavMeshPath path;
-
 	private new void Awake()
 	{
 		base.Awake();
-
-		agent = GetComponent<NavMeshAgent>();
-		path = new NavMeshPath();
 	}
 
 	private void Start()
@@ -30,6 +23,7 @@ public class AIController : ExternalController
 					BT.Wait(1f)
 				),
 				BT.If(CanTakeBehind).OpenBranch(
+					BT.Call(() => { Debug.Log("Taking your six"); }),
 					BT.Wait(5f),
 					BT.Call(FireAtTarget),
 					BT.Wait(1f)
@@ -135,8 +129,7 @@ public class AIController : ExternalController
 
 	private void MoveToTarget()
 	{
-		agent.stoppingDistance = 15f;
-		SetDestination(target.transform.position);
+		tankController.SetDestination(target.transform.position, 15f);
 	}
 
 	private void EndTurn()
@@ -160,38 +153,13 @@ public class AIController : ExternalController
 		}
 
 		Vector3 targetBehind = target.transform.position - (4f * target.transform.forward);
-		if (agent.CalculatePath(targetBehind, path) &&
-			path.status == NavMeshPathStatus.PathComplete &&
-			GetPathLength(path) * tankController.moveCost < tankController.actionPoint.Value - tankController.fireCost
-		)
-		{
-			Debug.Log("Attempting to take back: " + targetBehind);
-			agent.stoppingDistance = 0.5f;
-			agent.ResetPath();
-			return agent.SetPath(path);
-		}
-
-		return false;
+		int availableActionPoints = tankController.actionPoint.Value - tankController.fireCost;
+		return tankController.CalculateAndSetPath(targetBehind, availableActionPoints, 0.5f);
 	}
 
 	private bool IsInCannonRange()
 	{
 		ShellController shell = ShellManager.instance.shell.GetComponent<ShellController>();
 		return shell.range >= Vector3.Distance(transform.position, target.transform.position);
-	}
-
-	public static float GetPathLength(NavMeshPath path)
-	{
-		float length = 0f;
-
-		if ((path.status != NavMeshPathStatus.PathInvalid) && (path.corners.Length > 1))
-		{
-			for (int i = 1; i < path.corners.Length; ++i)
-			{
-				length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
-			}
-		}
-
-		return length;
 	}
 }

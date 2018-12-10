@@ -15,11 +15,13 @@ public class TankController : MonoBehaviour
 	public int fireCost = 30;
 
 	private NavMeshAgent agent;
+	private NavMeshPath path;
 	private TankHitbox[] hitboxes;
 
 	private void Awake()
 	{
 		agent = GetComponent<NavMeshAgent>();
+		path = new NavMeshPath();
 		hitboxes = GetComponentsInChildren<TankHitbox>();
 
 		foreach(TankHitbox hitbox in hitboxes)
@@ -63,15 +65,49 @@ public class TankController : MonoBehaviour
 		return agent.pathPending || IsMoving();
 	}
 
-	public void SetDestination(Vector3 destination)
+	public bool SetDestination(Vector3 destination, float stoppingDistance = 0.5f)
 	{
 		if (IsBusy())
 		{
 			Debug.Log("Agent is busy, cannot set new destination");
-			return;
+			return false;
 		}
 
-		agent.SetDestination(destination);
+		agent.stoppingDistance = stoppingDistance;
+		agent.ResetPath();
+		return agent.SetDestination(destination);
+	}
+
+	public bool CalculateAndSetPath(Vector3 destination, int maximumCost, float stoppingDistance = 0.5f)
+	{
+		agent.CalculatePath(destination, path);
+
+		if (path.status != NavMeshPathStatus.PathInvalid)
+		{
+			if (GetPathLength() * moveCost <= maximumCost)
+			{
+				agent.stoppingDistance = stoppingDistance;
+				agent.ResetPath();
+				return agent.SetPath(path);
+			}
+		}
+
+		return false;
+	}
+
+	private float GetPathLength()
+	{
+		float length = 0f;
+
+		if ((path.status != NavMeshPathStatus.PathInvalid) && (path.corners.Length > 1))
+		{
+			for (int i = 1; i < path.corners.Length; ++i)
+			{
+				length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+			}
+		}
+
+		return length;
 	}
 
 	public void RotateTurretTo(Vector3 target)
