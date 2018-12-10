@@ -52,6 +52,9 @@ By design, behavior trees are meant to control single agents. For this reason, u
 However, I think that this weakness can be mitigated by implementing a **AI Director**, which oversees the total strategy, and choosing appropriate targets for each AI agent.
 
 # To Do List
+- Seperate hitPoints and actionPoints from TankController
+	- The hitPoints and actionPoints should be inside seperate components, **Attackable** and **Actionable**
+	- TankController will be inherited from **Actionable**
 - Improved UI
 	- Show move range and fire range
 	- Alert players when action point is low
