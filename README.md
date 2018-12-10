@@ -1,10 +1,13 @@
 # TankCommander
 This is a simple turn based strategy game. Back attacks do triple damage, so careful positioning is key!
+
 This game was built with **Unity 2018.2.18f1**.
 
 # How to Play
 Left Click to move your tanks.
+
 Left Click + A to fire your cannon.
+
 Click 'End Turn' you end your turn.
 
 # Assets Used
